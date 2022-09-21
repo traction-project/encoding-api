@@ -11,8 +11,16 @@ import aws from "aws-sdk";
 dotenv.config({ path: process.env.ENV_FILE_PATH });
 aws.config.loadFromPath(process.env.AWS_CREDENTIAL_FILE_PATH || "./aws.json");
 
+import { Sequelize } from "sequelize";
+
+import setupDatabase from "./models";
 import setupAuth from "./auth/local";
 import indexRouter from "./routes/index";
+
+const sequelize = new Sequelize({
+  dialect: "sqlite",
+  storage: "db/database.sqlite"
+});
 
 async function setupServer(): Promise<http.Server> {
   return new Promise((resolve) => {
@@ -83,6 +91,7 @@ async function launch() {
   console.log("Current environment:", process.env.NODE_ENV || "unknown");
 
   await setupServer();
+  await setupDatabase(sequelize);
   await setupAuth();
 }
 
