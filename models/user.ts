@@ -87,6 +87,8 @@ export default function (sequelize: Sequelize) {
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE
   }, {
-    sequelize
+    sequelize,
+    tableName: "users",
+    underscored: true
   });
 }

@@ -3,6 +3,7 @@ import passport from "passport";
 import Busboy from "busboy";
 import { v4 as uuid4 } from "uuid";
 
+import { User } from "../../models/user";
 import { getExtension, getFromEnvironment } from "../../util";
 import { tokenRequired } from "../../util/middleware"
 import { uploadToS3, deleteFromS3 } from "../../util/s3";
@@ -29,7 +30,7 @@ router.post("/login", (req, res, next) => {
     });
   }
 
-  return passport.authenticate("local", { session: false }, (err: Error | null, user: any | undefined, msg: { message: string }) => {
+  return passport.authenticate("local", { session: false }, (err: Error | null, user: User | undefined, msg: { message: string }) => {
     if (err) {
       return next(err);
     }
