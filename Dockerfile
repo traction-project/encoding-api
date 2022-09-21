@@ -1,11 +1,10 @@
-FROM troeggla/node-traction-mediavault:alpine-3.11
-
+FROM node:18.9.0-alpine3.16
 HEALTHCHECK --start-period=30s CMD ["curl", "-f", "http://localhost:3000/revision"]
+
+RUN apk add --no-cache yarn
 
 ADD . /code/
 WORKDIR /code
-
-COPY --from=frontend /code public/
 
 RUN yarn install && \
     yarn build && \
