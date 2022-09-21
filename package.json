@@ -5,7 +5,8 @@
   "scripts": {
     "start": "node --enable-source-maps ./bin/backend.js",
     "lint": "eslint --ext=ts,tsx,js,jsx .",
-    "build": "webpack"
+    "build": "webpack",
+    "register": "node register.js"
   },
   "dependencies": {
     "aws-sdk": "^2.863.0",
