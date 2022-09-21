@@ -22,7 +22,7 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
 
   public validatePassword(password: string): boolean {
     const hashedPassword = crypto.pbkdf2Sync(
-      password, this.salt!,
+      password, this.salt,
       10000, keyPasswordLeng,
       "sha512"
     ).toString("hex");
