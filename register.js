@@ -26,9 +26,11 @@ prompt.get([{ name: "username" }, { name: "password", hidden: true }], (err, res
     10000, 512, "sha512"
   ).toString("hex");
 
+  const now = new Date().toISOString();
+
   db.run(
     "INSERT INTO users (id, username, password, salt, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?)",
-    [uuid.v4(), username, hashedPassword, salt, new Date().toISOString(), new Date().toISOString()],
+    [uuid.v4(), username, hashedPassword, salt, now, now],
     (err) => {
       if (err) {
         console.log("Could not insert user:", err);
