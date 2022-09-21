@@ -55,12 +55,11 @@ async function setupServer(): Promise<http.Server> {
       res.render("error");
     });
 
-    let server: http.Server;
     const port = process.env.PORT || "3000";
     app.set("port", port);
 
     console.log("Starting HTTP server...");
-    server = http.createServer(app);
+    const server = http.createServer(app);
 
     server.listen(port);
 

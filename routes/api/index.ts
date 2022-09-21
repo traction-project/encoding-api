@@ -5,7 +5,7 @@ import { v4 as uuid4 } from "uuid";
 
 import { User } from "../../models/user";
 import { getExtension, getFromEnvironment } from "../../util";
-import { tokenRequired } from "../../util/middleware"
+import { tokenRequired } from "../../util/middleware";
 import { uploadToS3, deleteFromS3 } from "../../util/s3";
 import { encodeDash, getJobStatus } from "../../util/transcode";
 
