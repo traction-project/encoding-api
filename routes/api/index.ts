@@ -4,7 +4,7 @@ import Busboy from "busboy";
 import { v4 as uuid4 } from "uuid";
 
 import { getExtension, getFromEnvironment } from "../../util";
-import { tokenRequired, permissionRequired } from "../../util/middleware"
+import { tokenRequired } from "../../util/middleware"
 import { uploadToS3, deleteFromS3 } from "../../util/s3";
 import { encodeDash, getJobStatus } from "../../util/transcode";
 
@@ -51,7 +51,7 @@ router.get("/loginstatus", tokenRequired, (_, res) => {
   });
 });
 
-router.post("/upload/raw", tokenRequired, permissionRequired("upload_raw"), (req, res) => {
+router.post("/upload/raw", tokenRequired, (req, res) => {
   const busboy = new Busboy({ headers: req.headers });
 
   busboy.on("file", async (_, file, filename) => {
@@ -100,7 +100,7 @@ router.post("/upload/raw", tokenRequired, permissionRequired("upload_raw"), (req
  * with which the status of the transcoding job can be checked. If the
  * transcoding job could not be started an error 500 is returned.
  */
-router.post("/upload/encode", tokenRequired, permissionRequired("upload_raw"), async (req, res) => {
+router.post("/upload/encode", tokenRequired, async (req, res) => {
   const { input, hasAudio, resolutions } = req.body;
 
   if (!input) {
@@ -132,7 +132,7 @@ router.post("/upload/encode", tokenRequired, permissionRequired("upload_raw"), a
  * of `jobStatus` is equal to `Complete`, the object also contains the key
  * `manifest`, which contains a link to the generated MPD playlist for the job.
  */
-router.get("/upload/encode/status/:jobId", tokenRequired, permissionRequired("upload_raw"), async (req, res) => {
+router.get("/upload/encode/status/:jobId", tokenRequired, async (req, res) => {
   const { jobId } = req.params;
 
   try {
@@ -159,7 +159,7 @@ router.get("/upload/encode/status/:jobId", tokenRequired, permissionRequired("up
   }
 });
 
-router.delete("/upload/raw", tokenRequired, permissionRequired( "upload_raw"), async (req, res) => {
+router.delete("/upload/raw", tokenRequired, async (req, res) => {
   const { key } = req.body;
 
   if (!key) {

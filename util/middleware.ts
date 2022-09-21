@@ -29,23 +29,3 @@ export function authRequired(req: Request, res: Response, next: NextFunction) {
     });
   }
 }
-
-/**
- * Middleware functions which requires the current user to have the permissions
- * passed in as arguments. If the user object is not set, error 401 is returned
- * to the client and if the user does not have the required permissions, error
- * 403 is returned.
- * If the user is set and has the required permissions, the request is
- * forwarded to the next request handler.
- *
- * @param permissionNames Permission names required for the route
- */
-export function permissionRequired(...permissionNames: Array<string>) {
-  return (req: Request, res: Response, next: NextFunction) => {
-    res.status(403);
-    res.send({
-      status: "ERR",
-      message: "Permission failure"
-    });
-  };
-}
