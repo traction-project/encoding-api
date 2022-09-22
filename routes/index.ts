@@ -4,6 +4,8 @@ import { readFileSync } from "fs";
 import APIRouter from "./api";
 
 const router = Router();
+
+// Mount APIRouter under /api
 router.use("/api", APIRouter);
 
 /**

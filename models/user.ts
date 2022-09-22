@@ -5,6 +5,7 @@ import { Sequelize, Model, InferAttributes, InferCreationAttributes, CreationOpt
 import { getFromEnvironment } from "../util";
 
 const [ SESSION_SECRET ] = getFromEnvironment("SESSION_SECRET");
+const KEY_PASSWORD_LEN = 512;
 
 interface UserToken {
   _id: string;
@@ -12,6 +13,9 @@ interface UserToken {
   token: string;
 }
 
+/**
+ * Model definition for storing user records
+ */
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   declare id: CreationOptional<string>;
   declare username: string;
@@ -20,16 +24,30 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
   declare createdAt: CreationOptional<Date>;
   declare updatedAt: CreationOptional<Date>;
 
+  /**
+   * Validates a supplied password against the hash associated to the current
+   * instance.
+   *
+   * @param password Password to validate
+   * @returns True if the password matches the current user, false otherwise
+   */
   public validatePassword(password: string): boolean {
     const hashedPassword = crypto.pbkdf2Sync(
       password, this.salt,
-      10000, keyPasswordLeng,
+      10000, KEY_PASSWORD_LEN,
       "sha512"
     ).toString("hex");
 
     return this.password == hashedPassword;
   }
 
+  /**
+   * Generates a JSON Web Token, signs it using the value of `SESSION_SECRET`
+   * and returns the signed token as a string.
+   *
+   * @param validityInDays Validity of the token in days, defaults to 60
+   * @returns The signed JSON Web Token
+   */
   public generateToken(validityInDays = 60) {
     // Generate timestamp n days from now
     const now = new Date();
@@ -42,6 +60,12 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
     }, SESSION_SECRET);
   }
 
+  /**
+   * Returns a data structure containing the current user's ID, username and
+   * a signed JSON Web Token which is valid for 60 days.
+   *
+   * @returns A data structure containing the user's ID, username and a signed token
+   */
   public getAuth(): UserToken {
     return {
       _id: `${this.id}`,
@@ -51,9 +75,13 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
   }
 }
 
-const keyPasswordLeng = 512;
-
+/**
+ * Initialises the User model and associates it to an active Sequelize session.
+ *
+ * @param sequelize A Sequelize instance with an open database connection
+ */
 export default function (sequelize: Sequelize) {
+  // Schema definition for records of the User model
   User.init({
     id: {
       type: DataTypes.UUID,
@@ -71,14 +99,16 @@ export default function (sequelize: Sequelize) {
       }
     },
     password: {
-      type: DataTypes.STRING(keyPasswordLeng * 2),
+      type: DataTypes.STRING(KEY_PASSWORD_LEN * 2),
       unique: true,
       set(this: User, value: string) {
+        // Generate random salt
         this.salt = crypto.randomBytes(16).toString("hex");
 
+        // Hash password and salt using SHA-512 and set the `password` field of the current record
         this.setDataValue("password", crypto.pbkdf2Sync(
           value, this.salt,
-          10000, keyPasswordLeng,
+          10000, KEY_PASSWORD_LEN,
           "sha512"
         ).toString("hex"));
       }
