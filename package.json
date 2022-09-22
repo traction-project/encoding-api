@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node --enable-source-maps ./bin/backend.js",
-    "lint": "eslint --ext=ts,tsx,js,jsx .",
+    "lint": "eslint .",
     "build": "webpack",
     "register": "node register.js"
   },
