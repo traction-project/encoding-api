@@ -7,6 +7,9 @@ import { getFromEnvironment } from "../util";
 const [ SESSION_SECRET ] = getFromEnvironment("SESSION_SECRET");
 const KEY_PASSWORD_LEN = 512;
 
+/**
+ * Data type definition for user tokens which can be returned by login requests.
+ */
 interface UserToken {
   _id: string;
   username: string;
