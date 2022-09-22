@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 import express from "express";
 import logger from "morgan";
 import createError from "http-errors";
-import cookieParser from "cookie-parser";
 import http from "http";
 import path from "path";
 import passport from "passport";
@@ -32,8 +31,6 @@ async function setupServer(): Promise<http.Server> {
     app.use(passport.initialize());
 
     app.use(express.urlencoded({ extended: false }));
-    app.use(cookieParser());
-
     app.use(express.static(path.join(__dirname, "public")));
 
     app.use("/", indexRouter);
