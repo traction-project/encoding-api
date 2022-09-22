@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import Busboy from "busboy";
+import busboy from "busboy";
 import { v4 as uuid4 } from "uuid";
 
 import { User } from "../../models/user";
@@ -53,11 +53,11 @@ router.get("/loginstatus", tokenRequired, (_, res) => {
 });
 
 router.post("/upload/raw", tokenRequired, (req, res) => {
-  const busboy = new Busboy({ headers: req.headers });
+  const bb = busboy({ headers: req.headers });
 
-  busboy.on("file", async (_, file, filename) => {
+  bb.on("file", async (_, file, fileinfo) => {
     try {
-      const newName = UPLOAD_PREFIX + uuid4() + getExtension(filename);
+      const newName = UPLOAD_PREFIX + uuid4() + getExtension(fileinfo.filename);
       await uploadToS3(newName, file, BUCKET_NAME);
 
       res.send({
@@ -74,7 +74,7 @@ router.post("/upload/raw", tokenRequired, (req, res) => {
     }
   });
 
-  req.pipe(busboy);
+  req.pipe(bb);
 });
 
 /**
