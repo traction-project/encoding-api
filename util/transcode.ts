@@ -368,17 +368,21 @@ export function getJobStatus(jobId: string): Promise<[status: string, manifest?:
   return new Promise((resolve, reject) => {
     const transcoder = new aws.ElasticTranscoder();
 
+    // Read job status from transcoder API
     transcoder.readJob({ Id: jobId }, (err, data) => {
       if (err) {
+        // Reject promise if there was an error
         reject(err);
       } else {
         if (data.Job?.Status) {
+          // Resolve with manifest path if job is complete
           if (data.Job.Status == "Complete" && data.Job.Playlists) {
             resolve([
               data.Job.Status,
               `${data.Job.OutputKeyPrefix}${data.Job.Playlists[0].Name}.mpd`
             ]);
           } else {
+            // Resolve with current job status if job is not complete
             resolve([ data.Job.Status ]);
           }
         } else {

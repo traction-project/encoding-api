@@ -15,9 +15,11 @@ router.use("/api", APIRouter);
  */
 router.get("/revision", (_, res) => {
   try {
+    // Try to read contents of file REVISION and return to client
     const REVISION = readFileSync("REVISION").toString().trim();
     res.send(REVISION);
   } catch {
+    // Send string `unknown` if file could not be read
     res.send("unknown");
   }
 });

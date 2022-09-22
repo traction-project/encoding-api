@@ -35,12 +35,14 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
    * @returns True if the password matches the current user, false otherwise
    */
   public validatePassword(password: string): boolean {
+    // Hash given password together with salt
     const hashedPassword = crypto.pbkdf2Sync(
       password, this.salt,
       10000, KEY_PASSWORD_LEN,
       "sha512"
     ).toString("hex");
 
+    // Compare generated hash with value stored in record
     return this.password == hashedPassword;
   }
 
@@ -56,6 +58,7 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
     const now = new Date();
     const expirationDate = new Date().setDate(now.getDate() + validityInDays);
 
+    // Generate and sign token using SESSION_SECRET
     return jwt.sign({
       id: this.id,
       username: this.username,

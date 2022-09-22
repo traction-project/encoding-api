@@ -42,6 +42,7 @@ router.get("/", (_, res) => {
 router.post("/login", (req, res, next) => {
   const { username, password  } = req.body;
 
+  // Return HTTP code 400 if either username of password are missing
   if (!username || !password) {
     return res.status(400).send({
       status: "ERR",
@@ -49,15 +50,19 @@ router.post("/login", (req, res, next) => {
     });
   }
 
+  // Attempt to authenticate the request using the `local` authentication strategy
   return passport.authenticate("local", { session: false }, (err: Error | null, user: User | undefined, msg: { message: string }) => {
+    // Pass erorr to next handler if any error occurred
     if (err) {
       return next(err);
     }
 
+    // If user is defined, return authentication token data structure
     if (user) {
       return res.send(user.getAuth());
     }
 
+    // Return HTTP code 401 if authentication failed
     res.status(401).send({
       status: "ERR",
       ...msg
@@ -84,13 +89,18 @@ router.get("/loginstatus", tokenRequired, (_, res) => {
  * If the upload to S3 fails, the request returns with HTTP code 500.
  */
 router.post("/upload/raw", tokenRequired, (req, res) => {
+  // Initialise busboy session
   const bb = busboy({ headers: req.headers });
 
+  // Install handler for HTTP multipart requests
   bb.on("file", async (_, file, fileinfo) => {
     try {
+      // Generate new name for file
       const newName = UPLOAD_PREFIX + uuid4() + getExtension(fileinfo.filename);
+      // Upload file from request body to the given S3 bucket using the new name
       await uploadToS3(newName, file, BUCKET_NAME);
 
+      // Return new name in response
       res.send({
         status: "OK",
         name: newName
@@ -98,6 +108,7 @@ router.post("/upload/raw", tokenRequired, (req, res) => {
     } catch (e) {
       console.error(e);
 
+      // Return HTTP code 500 if an exception occurs during upload
       res.status(500).send({
         status: "ERR",
         message: "Could not upload to S3"
@@ -105,6 +116,7 @@ router.post("/upload/raw", tokenRequired, (req, res) => {
     }
   });
 
+  // Pipe request through busboy session
   req.pipe(bb);
 });
 
@@ -119,14 +131,16 @@ router.post("/upload/raw", tokenRequired, (req, res) => {
 router.delete("/upload/raw", tokenRequired, async (req, res) => {
   const { key } = req.body;
 
+  // Return HTTP code 400 if no key was specified in the request
   if (!key) {
-    res.status(400).send({
+    return res.status(400).send({
       status: "ERR",
       message: "No key specified"
     });
   }
 
   try {
+    // Try to delete the key from the S3 bucket
     await deleteFromS3(key, BUCKET_NAME);
 
     res.send({
@@ -135,6 +149,7 @@ router.delete("/upload/raw", tokenRequired, async (req, res) => {
   } catch (e) {
     console.error(e);
 
+    // Return HTTP code 500 if an exception occurs during deletion
     res.status(500).send({
       status: "ERR",
       message: "Could not delete from S3"
@@ -169,6 +184,7 @@ router.delete("/upload/raw", tokenRequired, async (req, res) => {
 router.post("/upload/encode", tokenRequired, async (req, res) => {
   const { input, hasAudio, resolutions } = req.body;
 
+  // Return HTTP code 400 if no input path was specified in the request
   if (!input) {
     return res.status(400).send({
       status: "ERR",
@@ -177,13 +193,16 @@ router.post("/upload/encode", tokenRequired, async (req, res) => {
   }
 
   try {
+    // Start transcoding job with the given options
     const jobId = await encodeDash(ETS_PIPELINE, input, hasAudio, resolutions);
 
+    // Return job ID to client
     res.send({
       status: "OK",
       jobId
     });
   } catch (e) {
+    // Return HTTP code 500 if an exception occurs during job creation
     res.status(500).send({
       status: "ERR",
       message: e.message
@@ -201,23 +220,35 @@ router.post("/upload/encode", tokenRequired, async (req, res) => {
 router.get("/upload/encode/status/:jobId", tokenRequired, async (req, res) => {
   const { jobId } = req.params;
 
+  // Return HTTP code 400 if no job ID was specified in the request
+  if (!jobId) {
+    return res.status(400).send({
+      status: "ERR",
+      message: "No input path specified"
+    });
+  }
+
   try {
+    // Get job status from the transcoder API
     const [ status, manifest ] = await getJobStatus(jobId);
     const response = {
       status: "OK",
       jobStatus: status
     };
 
+    // Return manifest path if transcoding job is complete
     if (status == "Complete") {
       res.send({
         ...response,
         manifest
       });
     } else {
+      // Return job status
       res.send(response);
     }
 
   } catch (e) {
+    // Return HTTP code 500 if job status could not be retrieved
     res.status(500).send({
       status: "ERR",
       message: e.message
