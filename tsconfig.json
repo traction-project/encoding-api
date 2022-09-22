@@ -6,19 +6,10 @@
     "module": "commonjs",
     "sourceMap": true,
     "target": "es6",
-    "jsx": "react",
     "strictNullChecks": true,
     "keyofStringsOnly": true,
     "noUnusedLocals": true,
     "baseUrl": ".",
-    "paths": {
-      "typings/*": [
-        "util/typing/*"
-      ],
-      "models/*": [
-        "models/*"
-      ]
-    }
   },
   "include": [
     "./**/*.ts"

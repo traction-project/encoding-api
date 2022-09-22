@@ -17,12 +17,12 @@ const backend = {
   },
   devtool: "source-map",
   resolve: {
-    extensions: [".js", ".ts"]
+    extensions: [".ts"]
   },
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
+        test: /\.ts?$/,
         use: "ts-loader"
       }
     ]
