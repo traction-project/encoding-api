@@ -3,3 +3,5 @@
 **/db
 **/coverage
 **/.yarn/cache
+aws.json
+.env
