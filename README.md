@@ -142,7 +142,7 @@ To check the status of a started transcoding job, the API supplies the endpoint
 `/api/upload/encode/status/:jobId`, where `:jobID` is the job ID of a
 transcoding job.
 
-    POST /api/upload/encode/status/[JOB_ID]
+    GET /api/upload/encode/status/[JOB_ID]
     Authorization: Bearer [TOKEN]
 
 The request will return the current status of the transcoding job with the
