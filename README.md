@@ -47,6 +47,11 @@ must be unique.
 
 ## API Documentation
 
+The following sections document each of the API endpoints that the application
+supplies in order to facilitate media upload and encoding. THis documentation
+can also be used as a specification to implement alternative APIs, e.g. ones
+that do not rely on external cloud services.
+
 ### Obtaining a Token
 
 In order to interact with the API, the caller is required to supply a JSON Web
