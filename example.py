@@ -94,6 +94,25 @@ def check_job_status(host: str, token: str, job_id: str) -> JobStatus:
     return "Exception", None
 
 
+def delete_uploaded_file(host: str, token: str, key: str) -> bool:
+    """Deletes a previously uploaded file."""
+    url = urljoin(host, "/api/upload/raw")
+
+    # Send delete request for given key
+    res = requests.delete(url, headers={
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json"
+    }, data=json.dumps({
+        "key": key
+    }))
+
+    # Return true if request was successful
+    if res.ok:
+        return True
+
+    return False
+
+
 def main(host: str, username: str, password: str, file_path: str):
     # Attempt login with username and password
     token = login(host, username, password)
@@ -142,6 +161,14 @@ def main(host: str, username: str, password: str, file_path: str):
         else:
             # Just print status
             print("Job exited with status:", status)
+
+    # Delete uploaded file
+    result = delete_uploaded_file(host, token, uploaded_path)
+
+    if result:
+        print("Original file deleted")
+    else:
+        print("Could not delete original file")
 
 
 if __name__ == "__main__":

@@ -58,9 +58,9 @@ NB: The `Content-Type` header of requests which send data should be set to
 does not apply to `/api/upload/raw`.
 
 Please refer to the script `example.py`, which illustrates a sample interaction
-with the API, including login, file upload, starting of a transcoding job and
-the checking of job status. In order to run the script, the package `requests`
-has to be installed.
+with the API, including login, file upload, starting of a transcoding job,
+checking of job status and finally deleting the originally uploaded file. In
+order to run the script, the package `requests` has to be installed.
 
 ### Obtaining a Token
 
