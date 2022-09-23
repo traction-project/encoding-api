@@ -8,7 +8,7 @@ const [ SESSION_SECRET ] = getFromEnvironment("SESSION_SECRET");
 const KEY_PASSWORD_LEN = 512;
 
 /**
- * Data type definition for user tokens which can be returned by login requests.
+ * Data type definition for user tokens which are returned by login requests.
  */
 interface UserToken {
   _id: string;
@@ -28,7 +28,7 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
   declare updatedAt: CreationOptional<Date>;
 
   /**
-   * Validates a supplied password against the hash associated to the current
+   * Validates a supplied password against the hash associated with the current
    * instance.
    *
    * @param password Password to validate
@@ -106,7 +106,7 @@ export default function (sequelize: Sequelize) {
     },
     password: {
       type: DataTypes.STRING(KEY_PASSWORD_LEN * 2),
-      unique: true,
+      allowNull: false,
       set(this: User, value: string) {
         // Generate random salt
         this.salt = crypto.randomBytes(16).toString("hex");
@@ -119,7 +119,10 @@ export default function (sequelize: Sequelize) {
         ).toString("hex"));
       }
     },
-    salt: DataTypes.STRING,
+    salt: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     createdAt: DataTypes.DATE,
     updatedAt: DataTypes.DATE
   }, {
