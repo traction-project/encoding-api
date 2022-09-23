@@ -53,6 +53,10 @@ supplies in order to facilitate media upload and encoding. This documentation
 can also be used as a specification to implement alternative APIs, e.g. ones
 that do not rely on external cloud services.
 
+NB: The `Content-Type` header of requests which send data should be set to
+`application/json` to ensure that the request is interpreted quickly. This
+does not apply to `/api/upload/raw`.
+
 ### Obtaining a Token
 
 In order to interact with the API, the caller is required to supply a JSON Web
