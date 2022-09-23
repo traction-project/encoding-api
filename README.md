@@ -57,6 +57,10 @@ NB: The `Content-Type` header of requests which send data should be set to
 `application/json` to ensure that the request is interpreted quickly. This
 does not apply to `/api/upload/raw`.
 
+Please refer to the script `example.py`, which illustrates a sample interaction
+with the API, including login, file upload, starting of a transcoding job and
+the checking of job status.
+
 ### Obtaining a Token
 
 In order to interact with the API, the caller is required to supply a JSON Web
