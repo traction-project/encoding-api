@@ -1,7 +1,8 @@
 FROM node:18.9.0-alpine3.16
+
+RUN apk add --no-cache yarn curl
 HEALTHCHECK --start-period=30s CMD ["curl", "-f", "http://localhost:3000/revision"]
 
-RUN apk add --no-cache yarn
 WORKDIR /code
 
 ADD package.json yarn.lock /code/
