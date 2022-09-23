@@ -16,7 +16,11 @@ const db = new sqlite.Database("./db/database.sqlite", sqlite.OPEN_READWRITE, (e
 prompt.start();
 
 // Retrieve username and password via STDIN, hiding password input
-prompt.get([{ name: "username" }, { name: "password", hidden: true }], (err, result) => {
+prompt.get([
+  { name: "username" },
+  { name: "password", hidden: true },
+  { name: "confirmation", hidden: true }
+], (err, result) => {
   // Exit if an error occurred
   if (err) {
     console.log(err);
@@ -24,7 +28,12 @@ prompt.get([{ name: "username" }, { name: "password", hidden: true }], (err, res
   }
 
   // Get username and password
-  const { username, password } = result;
+  const { username, password, confirmation } = result;
+
+  if (password !== confirmation) {
+    console.log("Password confirmation does not match");
+    process.exit(1);
+  }
 
   // Generate random salt
   const salt = crypto.randomBytes(16).toString("hex");
