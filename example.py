@@ -23,7 +23,7 @@ def login(host: str, username: str, password: str) -> Optional[str]:
         "password": password
     }))
 
-    # Return token is request was successful
+    # Return token if request was successful
     if res.ok:
         data = res.json()
         return data["token"]
@@ -155,7 +155,7 @@ def main(host: str, username: str, password: str, file_path: str):
             # Wait 1 second before sending next request
             sleep(1)
 
-        # Print manifest path if job exitedb successfully
+        # Print manifest path if job exited successfully
         if status == "Complete":
             print("Manifest generated at:", manifest)
         else:
