@@ -1,7 +1,7 @@
 services:
   web:
     build: .
-    image: traction-encoding-api
+    image: traction-encoding-api-production
     volumes:
       - ./aws.json:/code/aws.json
       - ./.env:/code/.env
