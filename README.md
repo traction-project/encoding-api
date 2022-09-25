@@ -28,6 +28,18 @@ After this, the Docker container can be built and started as such:
 This will build the container and launch it. After initialisation, the
 application is available on port 3001.
 
+### Production Builds
+
+There is a separate Docker Compose config file for production environments
+named `docker-compose.production.yml`. To build such a production image, invoke
+Docker Compose as such:
+
+    docker compose -f docker-compose.production.yml build
+    docker compose -f docker-compose.production.yml up -d
+
+This image is completely self-contained (except for `.env` and `aws.json`) and
+can also easily be deployed in a Docker Swarm environment.
+
 ## Adding User Accounts
 
 The application uses SQLite to manage user accounts. Initially, the database is
