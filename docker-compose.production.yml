@@ -2,7 +2,6 @@ services:
   web:
     build: .
     image: traction-encoding-api
-    restart: always
     volumes:
       - ./aws.json:/code/aws.json
       - ./.env:/code/.env
@@ -16,3 +15,12 @@ services:
       options:
         max-size: "200k"
         max-file: "3"
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 2
+        delay: 10s
+        order: start-first
