@@ -4,7 +4,7 @@ import sys
 
 from os.path import basename
 from time import sleep
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List
 from urllib.parse import urljoin
 
 # Type alias for transcoding job status
@@ -46,6 +46,22 @@ def upload_file(host: str, token: str, file_path: str) -> Optional[str]:
     if res.ok:
         data = res.json()
         return data["name"]
+
+    return None
+
+
+def get_resolutions(host, token) -> Optional[List[str]]:
+    """Retrieves a list of available resolutions for the encoding process."""
+    url = urljoin(host, "/api/upload/encode/resolutions")
+
+    # Send request for retrieving resolutions
+    res = requests.get(url, headers={
+        "Authorization": f"Bearer {token}"
+    })
+
+    if res.ok:
+        data = res.json()
+        return data["resolutions"]
 
     return None
 
@@ -131,6 +147,15 @@ def main(host: str, username: str, password: str, file_path: str):
         sys.exit(1)
 
     print("File uploaded")
+
+    # Get resolutions
+    resolutions = get_resolutions(host, token)
+
+    if resolutions is None:
+        print("Could not retrieve resolutions")
+        sys.exit(1)
+
+    print("Available resolutions:", resolutions)
 
     # If file is either *.mov or *.mp4, start transcoding job
     if file_path.endswith("mov") or file_path.endswith("mp4"):
