@@ -3,7 +3,7 @@ import aws from "aws-sdk";
 /**
  * List of available video resolutions and their ETS preset names
  */
-const resolutions: { [key: string]: [presetName: string, bitrate: string] } = {
+export const resolutions: { [key: string]: [presetName: string, bitrate: string] } = {
   "1080p": ["1653913357100-ikb9ew", "6m"],
   "720p": ["1351620000001-500020", "4m"],
   "480p": ["1351620000001-500030", "2m"],

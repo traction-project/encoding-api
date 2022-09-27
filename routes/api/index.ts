@@ -7,7 +7,7 @@ import { User } from "../../models/user";
 import { getExtension, getFromEnvironment } from "../../util";
 import { tokenRequired } from "../../util/middleware";
 import { uploadToS3, deleteFromS3 } from "../../util/s3";
-import { encodeDash, getJobStatus } from "../../util/transcode";
+import { encodeDash, getJobStatus, resolutions } from "../../util/transcode";
 
 const [ BUCKET_NAME, ETS_PIPELINE ] = getFromEnvironment("BUCKET_NAME", "ETS_PIPELINE");
 const UPLOAD_PREFIX = "upload/";
@@ -254,6 +254,17 @@ router.get("/upload/encode/status/:jobId", tokenRequired, async (req, res) => {
       message: e.message
     });
   }
+});
+
+/**
+ * Returns a list of available output resolutions that can be passed as
+ * parameters to /upload/encode.
+ */
+router.get("/upload/encode/resolutions", tokenRequired, (req, res) => {
+  res.send({
+    status: "OK",
+    resolutions: Object.getOwnPropertyNames(resolutions)
+  });
 });
 
 export default router;
