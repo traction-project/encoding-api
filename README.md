@@ -127,6 +127,19 @@ verb HTTP `DELETE`, supplying the path to the file to be deleted under the key
 
     { "key": "[PATH_TO_FILE_ON_S3]" }
 
+### Retrieving Available Resolutions
+
+The endpoint for starting new transcoding jobs offers a parameter which allows
+one to specify the desired output resolutions. This endpoint allows the caller
+to retrieve a list of available output resolutions. The resolutions `720p`,
+`480p` and `360p` are always available.
+
+    GET /api/upload/encode/resolutions
+    Authorization: Bearer [TOKEN]
+
+A JSON data structure with the key `resolutions` is returned which contains a
+list of supported resolutions for the transcoding job.
+
 ### Starting a Transcoding Job
 
 In order to start a DASH transcoding job for an uploaded video or audio file,
@@ -135,9 +148,9 @@ expects the key `input` containing the path to the file to be encoded in the
 JSON body of the request.
 
 Optionally, a list of desired output resolutions can be submitted as an array.
-Accepted values for items in the array are `1080p`, `720p`, `480p`, `360p`,
-`240p` and `180p`. If not supplied, the file is encoded to `720p`, `480p` and
-`360p`.
+A list of available resolutions can be retrieved by calling the endpoint
+`/api/upload/encode/resolutions`. If the parameter is omitted, the file is
+encoded to `720p`, `480p` and `360p` by default.
 
 Also note, if a video file which does not contain an audio track is to be
 encoded, the option `hasAudio` set to `false` has to be passed in the request
