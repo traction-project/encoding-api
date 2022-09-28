@@ -20,19 +20,33 @@ filled in:
 - `ETS_PIPELINE` the name of the Elastic Transcoder pipeline used to transcode
   uploaded media files
 
-After this, the Docker container can be built and started as such:
+### Development Builds
+
+For development, make sure you have `docker`, `node` and `yarn` installed.
+Build and start the container as such:
 
     docker compose build
     docker compose up -d
 
-This will build the container and launch it. After initialisation, the
-application is available on port 3001.
+Because the application bundle is mounted inside the container from the host
+machine, it needs to be built as well. This is done as follows:
+
+    yarn install
+    yarn build
+
+After any change to the code, `yarn build` needs to be run in order to refresh
+the compiled bundle. Also `docker compose restart web` should the run to ensure
+the application is restarted using the new bundle.
+
+The application itself is now available on port 3001.
 
 ### Production Builds
 
 There is a separate Docker Compose config file for production environments
-named `docker-compose.production.yml`. To build such a production image, invoke
-Docker Compose as such:
+named `docker-compose.production.yml`. This does not require compiling the
+bundle locally and is thus ideal for deployment environments or if there is no
+intention of changing the code. To build such a production image, invoke Docker
+Compose as such:
 
     docker compose -f docker-compose.production.yml build
     docker compose -f docker-compose.production.yml up -d
