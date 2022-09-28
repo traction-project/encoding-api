@@ -6,7 +6,12 @@ the API found in the Co-Creation Space and can be deployed with a minimal
 amount of dependencies.
 
 <div>
-    <img src="https://www.traction-project.eu/wp-content/uploads/sites/3/2020/02/Logo-cabecera-Traction.png" style="float: left;"/><em>This tool was originally developed as part of the <a href="https://www.traction-project.eu/">TRACTION</a> project, funded by the European Commission’s <a hef="http://ec.europa.eu/programmes/horizon2020/">Horizon 2020</a> research and innovation programme under grant agreement No. 870610.</em>
+  <div style="float: left;">
+    <img src="https://www.traction-project.eu/wp-content/uploads/sites/3/2020/02/Logo-cabecera-Traction.png" />
+  </div>
+  <div>
+    <em>This tool was originally developed as part of the <a href="https://www.traction-project.eu/">TRACTION</a> project, funded by the European Commission’s <a hef="http://ec.europa.eu/programmes/horizon2020/">Horizon 2020</a> research and innovation programme under grant agreement No. 870610.</em>
+  </div>
 </div>
 <br style="clear: both;" />
 
@@ -187,8 +192,9 @@ body. Otherwise the encoding will fail. If omitted, `hasAudio` defaults to
 
     { "input": "[PATH_TO_FILE_ON_S3]", "resolutions": ["1080p", "360p"] }
 
-Upon success, the response will contain the job ID of the newly started
-transcoding job under the key `jobId` in the JSON response body.
+If an unknown resolution is passed, it will be ignored. Upon success, the
+response will contain the job ID of the newly started transcoding job under the
+key `jobId` in the JSON response body.
 
 ### Checking Transcoding Job Status
 
