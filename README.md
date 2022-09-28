@@ -10,9 +10,16 @@ amount of dependencies.
 ## Setup
 
 In order to run the application, a JSON file containing AWS credentials called
-`aws.json` needs to be placed in the application root. Further, the file
-`.env-sample` needs to be renamed to `.env` and the following values need to be
-filled in:
+`aws.json` needs to be placed in the application root. The file must have the
+following structure:
+
+    {
+      "accessKeyId": "[YOUR_ACCESS_KEY]",
+      "secretAccessKey": "[YOUR_SECRET_KEY]"
+    }
+
+Further, the file `.env-sample` needs to be renamed to `.env` and the following
+values need to be filled in:
 
 - `SESSION_SECRET` a string of random characters that is used to sign the JSON
   Web Tokens
@@ -35,7 +42,7 @@ machine, it needs to be built as well. This is done as follows:
     yarn build
 
 After any change to the code, `yarn build` needs to be run in order to refresh
-the compiled bundle. Also `docker compose restart web` should the run to ensure
+the compiled bundle. Also `docker compose restart web` should be run to ensure
 the application is restarted using the new bundle.
 
 The application itself is now available on port 3001.
