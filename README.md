@@ -16,7 +16,8 @@ following structure:
 
     {
       "accessKeyId": "[YOUR_ACCESS_KEY]",
-      "secretAccessKey": "[YOUR_SECRET_KEY]"
+      "secretAccessKey": "[YOUR_SECRET_KEY]",
+      "region": "[AWS_REGION]"
     }
 
 Further, the file `.env-sample` needs to be renamed to `.env` and the following
@@ -25,8 +26,9 @@ values need to be filled in:
 - `SESSION_SECRET` a string of random characters that is used to sign the JSON
   Web Tokens
 - `BUCKET_NAME` the name of the S3 bucket that the files should be uploaded to
-- `ETS_PIPELINE` the name of the Elastic Transcoder pipeline used to transcode
-  uploaded media files
+- `ETS_PIPELINE` the ID of the Elastic Transcoder pipeline used to transcode
+  uploaded media files. NB: Make sure to supply the ID of the pipeline and not
+  the name
 
 ### Development Builds
 
