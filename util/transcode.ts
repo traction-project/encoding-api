@@ -1,15 +1,25 @@
 import aws from "aws-sdk";
+import { existsSync, readFileSync } from "fs";
+
+// Path to file containing custom presets
+const PRESET_FILE_PATH = "./presets.json";
+
+// Check if preset file exists and read it if it does
+const customPresets = (existsSync(PRESET_FILE_PATH)) ? (
+  JSON.parse(readFileSync(PRESET_FILE_PATH).toString())
+) : (
+  {}
+);
 
 /**
  * List of available video resolutions and their ETS preset names
  */
 export const resolutions: { [key: string]: [presetName: string, bitrate: string] } = {
-  "1080p": ["1653913357100-ikb9ew", "6m"],
   "720p": ["1351620000001-500020", "4m"],
   "480p": ["1351620000001-500030", "2m"],
   "360p": ["1351620000001-500040", "1m"],
   "240p": ["1351620000001-500050", "600k"],
-  "180p": ["1619779551954-u1rt32", "100k"]
+  ...customPresets
 };
 
 /**
