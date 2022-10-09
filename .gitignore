@@ -87,3 +87,4 @@ CONTAINER_ALREADY_STARTED_PLACEHOLDER
 cert/
 
 *.swp
+presets.json
