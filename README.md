@@ -85,14 +85,14 @@ must be unique.
 ## Custom Encoding Presets
 
 By default, the application supports the resolutions `720p`, `480p`, `360p` and
-`240p`. One can, however add custom encoding presets by creating them in the
-Transcoder config on AWS and adding their preset IDs to a file named
-`presets.json` in the application root. A sample file with custom presets named
-`presets.json-sample` is provided.
+`240p`. One can, however, add custom encoding presets by creating them in the
+Transcoder preset config menu on AWS and adding their preset IDs to a file
+named `presets.json` in the application root. A sample file with custom presets
+named `presets.json-sample` is provided.
 
 The file contains a JSON dictionary, with the keys being unique, descriptive
 names, e.g. denoting the resolution that the preset produces. Each key is
-associated to a 2-tuple containing the preset ID and the presets bitrate.
+associated to its corresponding preset ID.
 
 Once added, the application should be restarted. The availability of the custom
 presets can be verified by calling `GET /api/upload/encode/resolutions`.
