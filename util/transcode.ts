@@ -14,11 +14,11 @@ const customPresets = (existsSync(PRESET_FILE_PATH)) ? (
 /**
  * List of available video resolutions and their ETS preset names
  */
-export const resolutions: { [key: string]: [presetName: string, bitrate: string] } = {
-  "720p": ["1351620000001-500020", "4m"],
-  "480p": ["1351620000001-500030", "2m"],
-  "360p": ["1351620000001-500040", "1m"],
-  "240p": ["1351620000001-500050", "600k"],
+export const resolutions: { [key: string]: string } = {
+  "720p": "1351620000001-500020",
+  "480p": "1351620000001-500030",
+  "360p": "1351620000001-500040",
+  "240p": "1351620000001-500050",
   ...customPresets
 };
 
@@ -29,7 +29,7 @@ export const resolutions: { [key: string]: [presetName: string, bitrate: string]
  * @param input Name of the input with prefix path and extension
  * @returns A tuple with an element for prefix path, file basename and extension
  */
-function processInputPath(input: string): [ prefix: string, basename: string, extension: string ] {
+function processInputPath(input: string): [prefix: string, basename: string, extension: string] {
   const pathComponents = input.split("/");
 
   // Get filename without path prefix
@@ -68,15 +68,18 @@ function processInputPath(input: string): [ prefix: string, basename: string, ex
  * fail. Returns a promise which resolves to the job ID of the created
  * transcoding job or rejects with an error otherwise.
  *
- * The given input file is encoded into three output video streams with the
- * bitrates 4800k, 2400k and 1200k and one audio track (unless `hasAudio` is
- * set to false). Thumbnails will be generated as PNG files from the 4800k
- * video stream, with one thumbnail saved every 5 minutes.
+ * By default, the given input file is encoded into three output video streams
+ * with the bitrates 4800k, 2400k and 1200k and one audio track (unless
+ * `hasAudio` is set to false). Thumbnails will be generated as PNG files from
+ * the 4800k video stream, with one thumbnail saved every 5 minutes.
  *
  * The function also accepts an array of video resolutions that should be
- * generated for the output. Possible values for items in the array are `1080p`,
- * `720p`, `480p`, `360p`, `240p` and `180p`. All other values are ignored.
- * Defaults to `["720p", "480p", "360p"]`.
+ * generated for the output. By default, possible values for items in the array
+ * are `720p`, `480p`, `360p` and `240p`. Custom presets can be added by
+ * modifying the file `presets.json` at the application root and available
+ * resolutions can be retrieved by examining the value of the const
+ * `customPresets` All other values are ignored. The parameter defaults to
+ * `["720p", "480p", "360p"]`.
  *
  * @param pipeline ID of the transcoding pipeline to use
  * @param input Path to input file
@@ -91,13 +94,13 @@ export function encodeDash(pipeline: string, input: string, hasAudio = true, out
   const dashOutputs = outputResolutions.reduce((outputs, resolution) => {
     // Check if value is a valid resolution
     if (resolutions[resolution]) {
-      const [ preset, bitrate ] = resolutions[resolution];
+      const preset = resolutions[resolution];
 
       // Generate entry with right folder and preset name
       return [
         ...outputs,
         {
-          Key: `dash-${bitrate}/${inputBasename}`,
+          Key: `dash-${resolution}/${inputBasename}`,
           PresetId: preset,
           SegmentDuration: "3"
         }
@@ -115,7 +118,7 @@ export function encodeDash(pipeline: string, input: string, hasAudio = true, out
   });
 
   // Transcoder configuration, outputs are placed under the path transcoded/,
-  // with separate directories for each bitrate. Audio tracks and thumbnails
+  // with separate directories for each resolution. Audio tracks and thumbnails
   // are also placed in separate directories. The manifest is placed directly
   // into the transcoded/ folder
   const params = {
