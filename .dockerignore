@@ -5,3 +5,4 @@
 **/.yarn/cache
 aws.json
 .env
+presets.json
