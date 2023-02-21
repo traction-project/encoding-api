@@ -9,7 +9,7 @@
     "strictNullChecks": true,
     "keyofStringsOnly": true,
     "noUnusedLocals": true,
-    "baseUrl": ".",
+    "baseUrl": "."
   },
   "include": [
     "./**/*.ts"
